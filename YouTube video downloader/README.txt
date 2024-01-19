@@ -9,8 +9,8 @@ tkinter
 urllib
 io
 random
-pytube  pip install pillow
-pillow  pip install pytube
+pytube  ( download CMD command: pip install pillow )
+pillow  ( download CMD command: pip install pytube )
 
 ======================================================
 
