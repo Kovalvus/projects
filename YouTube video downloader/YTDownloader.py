@@ -1,3 +1,4 @@
+# PROJECT BY Kovalvus on github
 from pytube import YouTube
 from tkinter import *
 from PIL import ImageTk, Image
