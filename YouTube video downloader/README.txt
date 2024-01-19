@@ -29,5 +29,5 @@ NOTE: if you want to cancel downloading the video click "cancel", the "X" button
 
 ======================================================
 
-Project made by Koval on github
+Project made by Kovalvus on github
 Enjoy :)
