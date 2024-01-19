@@ -1,3 +1,5 @@
+# Project made by Kovalvus on github
+# Enjoy :)
 from tkinter import *
 from math import *
 window = Tk()
