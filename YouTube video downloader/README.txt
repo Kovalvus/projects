@@ -19,7 +19,7 @@ How to use:
 1. Paste a YouTube link in the entry place after opening the app and click "Download"
 
 2. A popup should appear, choose the resolution you want
-( "Highest resolution" will choose the highest resolution available up to 720p, and not choosing will download in 360p )
+( "Highest resolution" will choose the highest resolution available up to 720p, and not choosing any resolution will make the download in 360p )
 
 3. click Download video
 
