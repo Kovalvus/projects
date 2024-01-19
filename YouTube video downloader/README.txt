@@ -26,6 +26,7 @@ How to use:
 NOTE: if you want to cancel downloading the video click "cancel", the "X" button has been disabled to avoid bugs
 
 4. After downloading a new folder named "downloaded videos" should appear in the same folder as the .py file, all downloaded files will be stored in it
+
 ======================================================
 
 Project made by Koval on github
