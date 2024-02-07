@@ -44,6 +44,8 @@ DealerCigarettePack = 0
 DealerBeer = 0
 DealerMagnifyingGlass = 0 
 
+GuaranteedItems = 0  # Var for giving the guaranteed amount of items at the beginning of game 2 and 3 (0 by default and after getting items in game 3, 1 when you reach game 2, 2 when you reach game 3)
+
 ItemList = ["Hand Saw","HandCuffs", "Cigarette Pack", "Magnifying Glass", "Beer"]
 
 
@@ -107,7 +109,7 @@ def Help():  # Help Menu
 # No items
             
 def Game(): # Round 1
-    global PlayerName, MaxHP, PlayerHP, DealerHP, ChamberCapacity, NoBlanks, NoLives, CurrentGame
+    global PlayerName, MaxHP, PlayerHP, DealerHP, ChamberCapacity, NoBlanks, NoLives, CurrentGame, PlayerName
     CurrentGame = 1
     print("*********************\nYou enter the room at the end of the hallway...\n")
     sleep(1.5)
@@ -162,16 +164,22 @@ def RandomGame1():  # Rounds after round 1
 # Items are obtainable (1-3)
 
 def Game2():
-    global PlayerName, MaxHP, PlayerHP, DealerHP, ChamberCapacity, NoBlanks, NoLives, CurrentGame
+    global PlayerName, MaxHP, PlayerHP, DealerHP, ChamberCapacity, NoBlanks, NoLives, CurrentGame, GuaranteedItems
     CurrentGame = 2
+    GuaranteedItems = 1
     print("*********************\nThe Dealer lost all HP and got sent flying into the darkness behind him as his blood splatters everywhere..." )
     sleep(2)
-    print("The Dealer gets back up and comes back to the table\n")
-    sleep(3)
-    print('He says:\n"Two items each"')
+    print("The Dealer gets back up, comes back to the table and says:\n")
     sleep(1.5)
-    print("\nBoxes appear in front of you and the Dealer\nYou reach inside it...\n")
+    print('"Let\'s make this a little more interesting...')
+    sleep(1.5)
+    print("\nBoxes appear in front of you and the Dealer\n")
+    print('"Two items each"\nMore items before every load.\n')
+    sleep(1.5)
+    print('You reach inside your box...')
+    sleep(2)
     RandomItems()
+    sleep(3)
     NoBlanks = randint(2,3)
     NoLives = 2
     ChamberCapacity = NoBlanks + NoLives
@@ -190,7 +198,9 @@ def Game2():
     PlayerTurn()
 
 def RandomGame2():
-    global PlayerName, MaxHP, PlayerHP, DealerHP, ChamberCapacity, NoBlanks, NoLives
+    global PlayerName, MaxHP, PlayerHP, DealerHP, ChamberCapacity, NoBlanks, NoLives, DealerCuffed, PlayerCuffed
+    DealerCuffed = 0
+    PlayerCuffed = 0
     sleep(2)
     print("\n*********************\nShells have ran out\n")
     sleep(3)
@@ -208,12 +218,86 @@ def RandomGame2():
     print('*********************\nWhat do you choose to do?')
     PlayerTurn()
 
+
+
+# ------------------------------------------------------------------------------Game 2 code ----------------------------------------------------------------------
+    
+# Game 3 rules:
+# round 1 --> random shells, 4 items
+# you can get 3 - 8 shells
+# Max hp 4 + 2 that you can't recover
+# Items are obtainable (2-5)
+    
+def Game3():
+    global PlayerName, MaxHP, PlayerHP, DealerHP, ChamberCapacity, NoBlanks, NoLives, CurrentGame, PlayerInventory, DealerInventory, DealerCuffed, PlayerCuffed, GuaranteedItems
+    DealerCuffed = 0
+    PlayerCuffed = 0
+    CurrentGame = 3
+    GuaranteedItems = 2
+    PlayerInventory = []
+    DealerInventory = []
+    print("*********************\nThe Dealer lost all HP and got sent flying into the darkness behind him as his blood splatters everywhere..." )
+    sleep(2)
+    print("The Dealer gets back up and comes back to the table and says:\n")
+    sleep(1.5)
+    print('"Long last, we arrive at the final showdown."\n')
+    sleep(2)
+    print('"No more defibrillators.\nNo more blood transfusions."')
+    sleep(2)
+    print('"Now, me and you, we are dancing on the edge of life and death."')
+    sleep(1.5)
+    print("\nBoxes appear in front of you and the Dealer\n")
+    print('"Four items each."')
+    sleep(1.5)
+    print('You reach inside your box...\n')
+    sleep(2)
+    RandomItems()
+    NoBlanks = 2
+    NoLives = 1
+    ChamberCapacity = NoBlanks + NoLives
+    NoBlanks = str(NoBlanks)
+    NoLives = str(NoLives)
+    MaxHP = 6
+    PlayerHP = 6
+    DealerHP = 6
+    print("You both have 6 HP, but if you reach 2 HP, you can't heal anymore")
+    sleep(1.5)
+    print("\nShells appear on the table...\n")
+    sleep(1)
+    print(NoBlanks+' Blanks and '+NoLives+' Lives\nDealer inserts the shells in an unknown order\n')
+    sleep(3)
+    print('*********************\nWhat do you choose to do?')
+    PlayerTurn()
+
+def RandomGame3():
+    global PlayerName, MaxHP, PlayerHP, DealerHP, ChamberCapacity, NoBlanks, NoLives, DealerCuffed, PlayerCuffed
+    DealerCuffed = 0
+    PlayerCuffed = 0
+    sleep(2)
+    print("\n*********************\nShells have ran out\n")
+    sleep(3)
+    NoBlanks = randint(2,4)
+    NoLives = randint(1,4)
+    ChamberCapacity = NoBlanks + NoLives
+    NoBlanks = str(NoBlanks)
+    NoLives = str(NoLives)
+    print("\nBoxes appear in front of you and the Dealer\n You reach inside it...\n")
+    RandomItems()
+    print('Shells appear on the table...\n')
+    sleep(1)
+    print(NoBlanks+' Blanks and '+NoLives+' Lives\nDealer inserts the shells in an unknown order\n')
+    sleep(3)
+    print('*********************\nWhat do you choose to do?')
+    PlayerTurn()
+
+
+
 # ======================================================================All Player related functions================================================================================
 
 def PlayerTurn():  # Instructions what to type to use certain items / a "main menu"
     global PlayerInventory, HandSaw, CigarettePack, MagnifyingGlass, Beer, HandCuffs, MaxHP, PlayerHP, DealerHP
     sleep(1)
-    print("\n\nYou have "+str(PlayerHP)+(" health\nThe Dealer has "+str(DealerHP)+" health\nThe max health for this game is "+str(MaxHP))+"\n")
+    print("\n*********************\nYou have "+str(PlayerHP)+(" health\nThe Dealer has "+str(DealerHP)+" health\nThe max health for this game is "+str(MaxHP))+"\n")
     if (len(PlayerInventory) == 0):  #checking if you have any items
         print("\nYou have no items")
     else:
@@ -250,7 +334,7 @@ def PlayerTurn():  # Instructions what to type to use certain items / a "main me
     ItemChoice()
 
 def ItemChoice():  # Choosing and using items
-    global HandSaw, CigarettePack, MagnifyingGlass, Beer, HandCuffs, PlayerInventory, shoot, DealerCuffed, ChamberCapacity, PlayerKnows, ShotgunSawed, PlayerHP, MaxHP
+    global HandSaw, CigarettePack, MagnifyingGlass, Beer, HandCuffs, PlayerInventory, shoot, DealerCuffed, ChamberCapacity, PlayerKnows, ShotgunSawed, PlayerHP, MaxHP, CurrentGame
     ItemChoicevar = input()
     if (ItemChoicevar == "Saw" or ItemChoicevar == "saw" and HandSaw == 1):  # Checking if the player chose saw and if they have it in the inventory 
         if (HandSaw == 1 and ShotgunSawed == 0):
@@ -263,7 +347,11 @@ def ItemChoice():  # Choosing and using items
     elif (ItemChoicevar == "Cig" or ItemChoicevar == "cig" and CigarettePack == 1):  # Checking if the player chose ciggaretes and if they have it in the inventory 
         if (PlayerHP == MaxHP):
             print("You already have max HP")
-        else:
+        elif (CurrentGame == 3 and PlayerHP <= 2):
+            print("You attempted to heal yourself but failed")
+            CigarettePack = 0
+            PlayerInventory.remove("Cigarette Pack")
+        elif (PlayerHP < MaxHP):
             PlayerHP += 1
             print("You smoke a cigarette, now you have "+PlayerHP+" HP")
             CigarettePack = 0
@@ -302,6 +390,7 @@ def ItemChoice():  # Choosing and using items
         if (DealerCuffed == 0):
             HandCuffs = 0
             DealerCuffed = 1
+            print("You handcuffed the Dealer\n")
             PlayerInventory.remove("HandCuffs")
         else:
             print("\nThe Dealer is already handcuffed")
@@ -336,7 +425,7 @@ def ShootTheShotgun():  # Shooting the shotgun, damaging yourself or the Dealer
         if (NextUp <= int(NoBlanks)):  # it was a blank
             print("*click*\n")
             sleep(1.5)
-            print("It was a blank")
+            print("It was a blank shell")
             NoBlanks = int(NoBlanks)
             NoBlanks -= 1
             ChamberCapacity -= 1
@@ -347,20 +436,12 @@ def ShootTheShotgun():  # Shooting the shotgun, damaging yourself or the Dealer
             if (PlayerHP == 0):  # Checking if the Player lost
                 PlayerLost()
 
-            if (ChamberCapacity == 0 and CurrentGame == 1 and DealerHP > 0):  # The round ended, cuz no shells are left
-                RandomGame1()
-            elif (ChamberCapacity > 0 and DealerCuffed == 1 and DealerHP > 0):  # Dealer is handcuffed so Player gets a second turn
-                DealerCuffed = 0
-                PlayerTurn()
-            elif (ChamberCapacity > 0 and DealerCuffed == 0 and DealerHP > 0):  # Dealer isn't handcuffed so it's his turn
-                DealerTurn()
-            elif (DealerHP == 0 and CurrentGame == 1):  # Checking if the game should end (dealers HP is down to 0)
-                Game2()
+            PlayerEndRound()
 
         else:
             print("*BOOM*\n")  # it was a live
             sleep(1.0)
-            print("It was a live")
+            print("It was a live shell")
             NoLives = int(NoLives)
             NoLives -= 1
             ChamberCapacity -= 1
@@ -374,15 +455,7 @@ def ShootTheShotgun():  # Shooting the shotgun, damaging yourself or the Dealer
             if (PlayerHP == 0):
                 PlayerLost()
 
-            if (ChamberCapacity == 0 and CurrentGame == 1 and DealerHP > 0):  # The round ended, cuz no shells are left
-                RandomGame1()
-            elif (ChamberCapacity > 0 and DealerCuffed == 1 and DealerHP > 0):  # Dealer is handcuffed so Player gets a second turn
-                DealerCuffed = 0
-                PlayerTurn()
-            elif (ChamberCapacity > 0 and DealerCuffed == 0 and DealerHP > 0):  # Dealer isn't handcuffed so it's his turn
-                DealerTurn()
-            elif (DealerHP == 0 and CurrentGame == 1):  # Checking if the game should end (dealers HP is down to 0)
-                Game2()
+            PlayerEndRound()
             
     elif (shoot == "Self" or shoot == "self"):
         print("*********************\nYou point the shotgun at yourself...")  # pointing the shotgun at yourself
@@ -400,7 +473,7 @@ def ShootTheShotgun():  # Shooting the shotgun, damaging yourself or the Dealer
         if (NextUp <= int(NoBlanks)):  # it was a blank
             print("*click*\n")
             sleep(1.5)
-            print("It was a blank")
+            print("It was a blank shell")
             NoBlanks = int(NoBlanks)
             NoBlanks -= 1
             ChamberCapacity -= 1
@@ -413,15 +486,23 @@ def ShootTheShotgun():  # Shooting the shotgun, damaging yourself or the Dealer
 
             if (ChamberCapacity == 0 and CurrentGame == 1 and DealerHP > 0):  # If you blank yourself you skip Dealers turn by default so he doesn't get uncuffed here
                 RandomGame1()
+            elif (ChamberCapacity == 0 and CurrentGame == 2 and DealerHP > 0):  # The round ended, cuz no shells are left (game2)
+                RandomGame2()
+            elif (ChamberCapacity == 0 and CurrentGame == 3 and DealerHP > 0):  # The round ended, cuz no shells are left (game3)
+                RandomGame3()
+            elif (DealerHP > 0 and ChamberCapacity > 0):  # The game and round doesn't end 
+                PlayerTurn()
             elif (DealerHP == 0 and CurrentGame == 1):  # Checking if the game should end (dealers HP is down to 0)
                 Game2()
-            elif (DealerHP > 0 and CurrentGame == 1 and ChamberCapacity > 0):  # The game and round doesn't end 
-                PlayerTurn()
+            elif (DealerHP == 0 and CurrentGame == 2):
+                Game3()
+            elif (DealerHP == 0 and CurrentGame == 3):
+                GameEnding()            
             
         else:
             print("*BOOM*\n")  # it was a live
             sleep(1.0)
-            print("It was a live")
+            print("It was a live shell")
             NoLives = int(NoLives)
             NoLives -= 1
             ChamberCapacity -= 1
@@ -435,15 +516,7 @@ def ShootTheShotgun():  # Shooting the shotgun, damaging yourself or the Dealer
             if (PlayerHP == 0):
                 PlayerLost()
 
-            if (ChamberCapacity == 0 and CurrentGame == 1 and DealerHP > 0):  # The round ended, cuz no shells are left
-                RandomGame1()
-            elif (ChamberCapacity > 0 and DealerCuffed == 1 and DealerHP > 0):  # Dealer is handcuffed so Player gets a second turn
-                DealerCuffed = 0
-                PlayerTurn()
-            elif (ChamberCapacity > 0 and DealerCuffed == 0 and DealerHP > 0):  # Dealer isn't handcuffed so it's his turn
-                DealerTurn()
-            elif (DealerHP == 0 and CurrentGame == 1):  # Checking if the game should end (dealers HP is down to 0)
-                Game2()
+            PlayerEndRound()
 
     elif (shoot == "Cancel" or shoot == "cancel"):
         PlayerTurn()
@@ -478,7 +551,7 @@ def DealerTurn():  # the "main menu" of Dealers turn
 # ----------------------------------------------------------------------The Dealers "AI" when using items--------------------------------------------------------------------------------
 
 def DealerItemChoice():
-    global DealerHandSaw, DealerCigarettePack, DealerMagnifyingGlass, DealerBeer, DealerHandCuffs, DealerInventory, DealerHP, PlayerHP, MaxHP, PlayerCuffed, NoBlanks, NoLives, DealerKnows, ChamberCapacity, ShotgunSawed
+    global DealerHandSaw, DealerCigarettePack, DealerMagnifyingGlass, DealerBeer, DealerHandCuffs, DealerInventory, DealerHP, PlayerHP, MaxHP, PlayerCuffed, NoBlanks, NoLives, DealerKnows, ChamberCapacity, ShotgunSawed, CurrentGame
     if (("Hand Saw" in DealerInventory) == True):  #Checking which items the Dealer has
         DealerHandSaw = 1
 
@@ -494,13 +567,21 @@ def DealerItemChoice():
     if (("HandCuffs" in DealerInventory) == True): 
         DealerHandCuffs = 1
 
-    if (DealerCigarettePack == 1 and DealerHP < MaxHP):  # Deciding if the Dealer will use the cigarettes
+    if (CurrentGame == 3 and DealerHP <= 2):  # Dealer reached the critical point and can't heal anymore (Game 3)
+        print("\nThe Dealer attempted to heal himself but failed")
+        DealerCigarettePack = 0
+        DealerInventory.remove("Cigarette Pack")
+        sleep(3)
+        DealerItemChoice()
+
+    elif (DealerCigarettePack == 1 and DealerHP < MaxHP):  # Deciding if the Dealer will use the cigarettes
         print("\nThe Dealer used his Cigarette Pack")
         DealerHP += 1
         DealerCigarettePack = 0
         DealerInventory.remove("Cigarette Pack")
         sleep(3)
         DealerItemChoice()
+    
 
     if (DealerHandCuffs == 1 and PlayerCuffed == 0):  # Deciding if the Dealer will use the handcuffs
         print("\nThe Dealer handcuffed you")
@@ -572,7 +653,7 @@ def DealerShoots():
         print("The Dealer points the shotgun at himself")
         sleep(3)
         print("*click*\n")
-        print("It was a blank")
+        print("It was a blank shell")
         NoBlanks = int(NoBlanks)
         NoBlanks -= 1
         ChamberCapacity -= 1
@@ -583,18 +664,13 @@ def DealerShoots():
         if (PlayerHP == 0):
                 PlayerLost()
 
-        if (ChamberCapacity == 0 and CurrentGame == 1 and DealerHP > 0):  # Even if you're handcuffed Dealer by blanking himself skips your turn so you'd stay cuffed
-            RandomGame1()
-        elif (ChamberCapacity > 0 and CurrentGame == 1 and DealerHP > 0):  # Dealers turn
-            DealerTurn()
-        elif (DealerHP == 0 and CurrentGame == 1):  # End of game 1
-            Game2()
+        DealerBlanks()
 
     elif (NextUp > int(NoBlanks) and DealerKnows == 2):  # Dealer knew it was a live
         print("The Dealer points the shotgun at you")
         sleep(3)
         print("*BOOM*\n")
-        print("It was a live")
+        print("It was a live shell")
         NoLives = int(NoLives)
         NoLives -= 1
         ChamberCapacity -= 1
@@ -618,7 +694,7 @@ def DealerShoots():
                 if (NextUp <= int(NoBlanks)):  # It's a blank (Dealer at himself)
                     print("*click*\n")
                     sleep(1.5)
-                    print("It was a blank")
+                    print("It was a blank shell")
                     NoBlanks = int(NoBlanks)
                     NoBlanks -= 1
                     ChamberCapacity -= 1
@@ -626,17 +702,12 @@ def DealerShoots():
                         print("\nThe barrel on the shotgun grew back...")
                         ShotgunSawed = 0
 
-                    if (ChamberCapacity == 0 and CurrentGame == 1 and DealerHP > 0):  # Even if you're handcuffed Dealer by blanking himself skips your turn so you'd stay cuffed
-                        RandomGame1()
-                    elif (ChamberCapacity > 0 and CurrentGame == 1 and DealerHP > 0):  # Dealers turn
-                        DealerTurn()
-                    elif (DealerHP == 0 and CurrentGame == 1):  # End of game 1
-                        Game2()
+                    DealerBlanks()
 
                 else:  # It's a live (Dealer at himself)
                     print("*BOOM*\n")
                     sleep(1.0)
-                    print("It was a live")
+                    print("It was a live shell")
                     NoLives = int(NoLives)
                     NoLives -= 1
                     ChamberCapacity -= 1
@@ -655,7 +726,7 @@ def DealerShoots():
                 if (NextUp <= int(NoBlanks)):  # It's a blank (Dealer at you)
                     print("*click*\n")
                     sleep(1.5)
-                    print("It was a blank")
+                    print("It was a blank shell")
                     NoBlanks = int(NoBlanks)
                     NoBlanks -= 1
                     ChamberCapacity -= 1
@@ -668,7 +739,7 @@ def DealerShoots():
                 else:  # It's a live (Dealer at you)
                     print("*BOOM*\n")
                     sleep(1.0)
-                    print("It was a live")
+                    print("It was a live shell")
                     NoLives = int(NoLives)
                     NoLives -= 1
                     ChamberCapacity -= 1
@@ -690,7 +761,7 @@ def DealerShoots():
                 if (NextUp <= int(NoBlanks)):  # It's a blank (Dealer at himself)
                     print("*click*\n")
                     sleep(1.5)
-                    print("It was a blank")
+                    print("It was a blank shell")
                     NoBlanks = int(NoBlanks)
                     NoBlanks -= 1
                     ChamberCapacity -= 1
@@ -698,17 +769,12 @@ def DealerShoots():
                         print("\nThe barrel on the shotgun grew back...")
                         ShotgunSawed = 0
 
-                    if (ChamberCapacity == 0 and CurrentGame == 1 and DealerHP > 0):  # Even if you're handcuffed Dealer by blanking himself skips your turn so you'd stay cuffed
-                        RandomGame1()
-                    elif (ChamberCapacity > 0 and CurrentGame == 1 and DealerHP > 0):  # Dealers turn
-                        DealerTurn()
-                    elif (DealerHP == 0 and CurrentGame == 1):  # End of game 1
-                        Game2()
+                    DealerBlanks()
 
                 else:  # It's a live (Dealer at himself)
                     print("*BOOM*\n")
                     sleep(1.0)
-                    print("It was a live")
+                    print("It was a live shell")
                     NoLives = int(NoLives)
                     NoLives -= 1
                     ChamberCapacity -= 1
@@ -727,7 +793,7 @@ def DealerShoots():
                 if (NextUp <= int(NoBlanks)):  # It's a blank (Dealer at you)
                     print("*click*\n")
                     sleep(1.5)
-                    print("It was a blank")
+                    print("It was a blank shell")
                     NoBlanks = int(NoBlanks)
                     NoBlanks -= 1
                     ChamberCapacity -= 1
@@ -740,7 +806,7 @@ def DealerShoots():
                 else:  # It's a live (Dealer at you)
                     print("*BOOM*\n")
                     sleep(1.0)
-                    print("It was a live")
+                    print("It was a live shell")
                     NoLives = int(NoLives)
                     NoLives -= 1
                     ChamberCapacity -= 1
@@ -762,7 +828,7 @@ def DealerShoots():
                 if (NextUp <= int(NoBlanks)):  # It's a blank (Dealer at himself)
                     print("*click*\n")
                     sleep(1.5)
-                    print("It was a blank")
+                    print("It was a blank shell")
                     NoBlanks = int(NoBlanks)
                     NoBlanks -= 1
                     ChamberCapacity -= 1
@@ -773,17 +839,12 @@ def DealerShoots():
                     if (PlayerHP == 0):
                         PlayerLost()
 
-                    if (ChamberCapacity == 0 and CurrentGame == 1 and DealerHP > 0):  # Even if you're handcuffed Dealer by blanking himself skips your turn so you'd stay cuffed
-                        RandomGame1()
-                    elif (ChamberCapacity > 0 and CurrentGame == 1 and DealerHP > 0):  # Dealers turn
-                        DealerTurn()
-                    elif (DealerHP == 0 and CurrentGame == 1):  # End of game 1
-                        Game2()
+                    DealerBlanks()
 
                 else:  # It's a live (Dealer at himself)
                     print("*BOOM*\n")
                     sleep(1.0)
-                    print("It was a live")
+                    print("It was a live shell")
                     NoLives = int(NoLives)
                     NoLives -= 1
                     ChamberCapacity -= 1
@@ -802,7 +863,7 @@ def DealerShoots():
                 if (NextUp <= int(NoBlanks)):  # It's a blank (Dealer at you)
                     print("*click*\n")
                     sleep(1.5)
-                    print("It was a blank")
+                    print("It was a blank shell")
                     NoBlanks = int(NoBlanks)
                     NoBlanks -= 1
                     ChamberCapacity -= 1
@@ -815,7 +876,7 @@ def DealerShoots():
                 else:  # It's a live (Dealer at you)
                     print("*BOOM*\n")
                     sleep(1.0)
-                    print("It was a live")
+                    print("It was a live shell")
                     NoLives = int(NoLives)
                     NoLives -= 1
                     ChamberCapacity -= 1
@@ -832,33 +893,88 @@ def DealerShoots():
 
 # ====================================================================-Other Miscellaneous functions==============================================================================
                     
-def PlayerIsCuffedCheck():  # Function for switching between turns/rounds/games after Dealers turn
+def PlayerIsCuffedCheck():  # Function for switching between turns/rounds/games after Dealer's turn
     global ChamberCapacity, PlayerCuffed, CurrentGame
 
     if (PlayerHP == 0):
         PlayerLost()
+    else:
+        if (ChamberCapacity == 0 and CurrentGame == 1 and DealerHP > 0):  # The round ended, cuz no shells are left
+            RandomGame1()
+        elif (ChamberCapacity == 0 and CurrentGame == 2 and DealerHP > 0):
+            RandomGame2()
+        elif (ChamberCapacity == 0 and CurrentGame == 3 and DealerHP > 0):
+            RandomGame3()
+        elif (ChamberCapacity > 0 and PlayerCuffed == 1 and DealerHP > 0):  # Player is handcuffed so Dealer gets a second turn
+            PlayerCuffed = 0
+            print("Handcuffs the Dealer put on you dissapeared\n")
+            DealerTurn()
+        elif (ChamberCapacity > 0 and PlayerCuffed == 0 and DealerHP > 0):  # Player isn't handcuffed so it's their turn
+            PlayerTurn()
+        elif (DealerHP == 0 and CurrentGame == 1):  # Dealer is at 0 HP, game 1 ends
+            Game2()
+        elif (DealerHP == 0 and CurrentGame == 2):  # Dealer is at 0 HP, game 2 ends
+            Game3()
+        elif (DealerHP == 0 and CurrentGame == 3):
+            GameEnding()
 
-    if (ChamberCapacity == 0 and CurrentGame == 1 and DealerHP > 0):  # The round ended, cuz no shells are left
+def DealerBlanks():  # Function for switching between turns/rounds/games after Dealer blanked himself
+    global ChamberCapacity, CurrentGame, DealerHP
+    if (ChamberCapacity == 0 and CurrentGame == 1 and DealerHP > 0):  # Even if you're handcuffed Dealer by blanking himself skips your turn so you'd stay cuffed
         RandomGame1()
-    elif (ChamberCapacity > 0 and PlayerCuffed == 1 and DealerHP > 0):  # Player is handcuffed so Dealer gets a second turn
-        PlayerCuffed = 0
+    elif (ChamberCapacity == 0 and CurrentGame == 2 and DealerHP > 0):
+        RandomGame2()
+    elif (ChamberCapacity == 0 and CurrentGame == 3 and DealerHP > 0):
+        RandomGame3()
+    elif (ChamberCapacity > 0 and DealerHP > 0):  # Dealers turn
         DealerTurn()
-    elif (ChamberCapacity > 0 and PlayerCuffed == 0 and DealerHP > 0):  # Player isn't handcuffed so it's their turn
-        PlayerTurn()
-    elif (DealerHP == 0 and CurrentGame == 1):  # Dealer is at 0 HP, game 1 ends
+    elif (DealerHP == 0 and CurrentGame == 1):  # End of game 1
         Game2()
+    elif (DealerHP == 0 and CurrentGame == 2):  # End of game 1
+        Game3()
+    elif (DealerHP == 0 and CurrentGame == 3):
+        GameEnding()
+
+def PlayerEndRound():  # Function for switching between turns/rounds/games when Player DIDN'T blank themselves
+    global ChamberCapacity, CurrentGame, DealerHP, DealerCuffed
+    if (ChamberCapacity == 0 and CurrentGame == 1 and DealerHP > 0):  # The round ended, cuz no shells are left (game1)
+        RandomGame1()
+    elif (ChamberCapacity == 0 and CurrentGame == 2 and DealerHP > 0):  # The round ended, cuz no shells are left (game2)
+        RandomGame2()
+    elif (ChamberCapacity == 0 and CurrentGame == 3 and DealerHP > 0):  # The round ended, cuz no shells are left (game3)
+        RandomGame3()
+    elif (ChamberCapacity > 0 and DealerCuffed == 1 and DealerHP > 0):  # Dealer is handcuffed so Player gets a second turn
+        DealerCuffed = 0
+        print("Dealers handcuffs disappear\n")
+        PlayerTurn()
+    elif (ChamberCapacity > 0 and DealerCuffed == 0 and DealerHP > 0):  # Dealer isn't handcuffed so it's his turn
+        DealerTurn()
+    elif (DealerHP == 0 and CurrentGame == 1):  # Checking if the game should end (dealers HP is down to 0)
+        Game2()
+    elif (DealerHP == 0 and CurrentGame == 2):
+        Game3()
+    elif (DealerHP == 0 and CurrentGame == 3):
+        GameEnding()
 
 def PlayerLost():
     print("\n\n*********************\n\nGAME OVER\nYou died")
     exit()
 
 def RandomItems():
-    global CurrentGame, PlayerInventory, DealerInventory
+    global CurrentGame, PlayerInventory, DealerInventory, GuaranteedItems
     NoItems = 0
-    if (CurrentGame == 2):  # Setting a max and min number of items you can get based on what game it is
-        NoItems = randint(1,3)
-    elif (CurrentGame == 3):
-        NoItems = randint(3,5)
+
+    if (GuaranteedItems == 0):
+        if (CurrentGame == 2):  # Setting a max and min number of items you can get based on what game it is
+            NoItems = randint(1,3)
+        elif (CurrentGame == 3):
+            NoItems = randint(2,5)
+    elif (GuaranteedItems == 1):
+        NoItems = 2
+        GuaranteedItems = 0
+    elif (GuaranteedItems == 2):
+        NoItems = 4
+        GuaranteedItems = 0
 
     for i in range(NoItems):  # Giving Player and Dealer random items 
         ChosenItem = randint(0, len(ItemList)-1)
@@ -876,6 +992,18 @@ def RandomItems():
             while(len(DealerInventory) > 8):
                 DealerInventory.pop()
     print("\nThe boxes disappear\n")
+
+def GameEnding():
+    global PlayerName
+    print("\n\n*********************\n\nThe Dealer gets sent flying into the dark mist behind him")
+    sleep(1)
+    print("But this time...\n")
+    sleep(1)
+    print("He doesn't come back to the table...\n")
+    sleep(2)
+    print('"'+PlayerName+' wins!" starts to flash on the computer screen mounted to the table\n')
+    sleep(2)
+    print("A case full of money appears where the box with items would normally be...\n\n\nTHE END")
 
 Start()  # Launch the game
 input()
