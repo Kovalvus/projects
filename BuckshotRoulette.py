@@ -17,6 +17,7 @@ ChamberCapacity = 0
 NoBlanks = 0
 NoLives = 0
 CurrentGame = 1
+FirstGame = 0  # 0 if it is the first game, 1 if you already died during round 1 or 2
 
 # ------------------------------------------------------------------------Variables related to items-------------------------------------------------------------------
 
@@ -109,16 +110,24 @@ def Help():  # Help Menu
 # No items
             
 def Game(): # Round 1
-    global PlayerName, MaxHP, PlayerHP, DealerHP, ChamberCapacity, NoBlanks, NoLives, CurrentGame, PlayerName
+    global PlayerName, MaxHP, PlayerHP, DealerHP, ChamberCapacity, NoBlanks, NoLives, CurrentGame, PlayerName, FirstGame
     CurrentGame = 1
-    print("*********************\nYou enter the room at the end of the hallway...\n")
-    sleep(1.5)
-    print('You see the Dealer emerging from the shadows.\nHe hands you a document that reads:\n')
-    sleep(2)
-    print('"GENERAL RELEASE OF LIABILITY"\n')
-    PlayerName = input('Enter Name: ')
+    print("\n\n*********************\nYou walk out of the toilet and pass a stranger...")
     sleep(1)
-    print('\nYou give him the document and the first game starts...\n')
+    print("\nYou enter a room at the end of the hallway...\n")
+    sleep(1.5)
+    print('You see the Dealer emerging from the shadows.')
+    if (FirstGame == 0):
+        print('\nHe says: "Please sign the waiver."\n')
+        sleep(1)
+        print('You pick up the document')
+        sleep(2)
+        print('"GENERAL RELEASE OF LIABILITY"\n')
+        PlayerName = input('Enter Name: ')
+        sleep(1)
+        print('\nYou give him the document and the first game starts...\n')
+    else:
+        print('"Welcome back"\n')
     NoBlanks = 2
     NoLives = randint(1,2)
     ChamberCapacity = NoBlanks + NoLives
@@ -164,18 +173,22 @@ def RandomGame1():  # Rounds after round 1
 # Items are obtainable (1-3)
 
 def Game2():
-    global PlayerName, MaxHP, PlayerHP, DealerHP, ChamberCapacity, NoBlanks, NoLives, CurrentGame, GuaranteedItems
+    global PlayerName, MaxHP, PlayerHP, DealerHP, ChamberCapacity, NoBlanks, NoLives, CurrentGame, GuaranteedItems, FirstGame
     CurrentGame = 2
     GuaranteedItems = 1
-    print("*********************\nThe Dealer lost all HP and got sent flying into the darkness behind him as his blood splatters everywhere..." )
-    sleep(2)
-    print("The Dealer gets back up, comes back to the table and says:\n")
-    sleep(1.5)
-    print('"Let\'s make this a little more interesting...')
-    sleep(1.5)
-    print("\nBoxes appear in front of you and the Dealer\n")
-    print('"Two items each"\nMore items before every load.\n')
-    sleep(1.5)
+    if(FirstGame == 0):
+        print("*********************\nThe Dealer lost all HP and got sent flying into the darkness behind him as his blood splatters everywhere..." )
+        sleep(2)
+        print("The Dealer gets back up, comes back to the table and says:\n")
+        sleep(1.5)
+        print('"Let\'s make this a little more interesting...')
+        sleep(1.5)
+        print("\nBoxes appear in front of you and the Dealer\n")
+        print('"Two items each"\nMore items before every load.\n')
+        sleep(1.5)
+    else:
+        print('"Welcome back"\n')
+        print("\nBoxes appear in front of you and the Dealer\n")
     print('You reach inside your box...')
     sleep(2)
     RandomItems()
@@ -334,7 +347,7 @@ def PlayerTurn():  # Instructions what to type to use certain items / a "main me
     ItemChoice()
 
 def ItemChoice():  # Choosing and using items
-    global HandSaw, CigarettePack, MagnifyingGlass, Beer, HandCuffs, PlayerInventory, shoot, DealerCuffed, ChamberCapacity, PlayerKnows, ShotgunSawed, PlayerHP, MaxHP, CurrentGame
+    global HandSaw, CigarettePack, MagnifyingGlass, Beer, HandCuffs, PlayerInventory, shoot, DealerCuffed, ChamberCapacity, PlayerKnows, ShotgunSawed, PlayerHP, MaxHP, CurrentGame, NoBlanks
     ItemChoicevar = input()
     if (ItemChoicevar == "Saw" or ItemChoicevar == "saw" and HandSaw == 1):  # Checking if the player chose saw and if they have it in the inventory 
         if (HandSaw == 1 and ShotgunSawed == 0):
@@ -957,8 +970,23 @@ def PlayerEndRound():  # Function for switching between turns/rounds/games when 
         GameEnding()
 
 def PlayerLost():
-    print("\n\n*********************\n\nGAME OVER\nYou died")
-    exit()
+    global CurrentGame, PlayerName, FirstGame
+    if (CurrentGame != 3):
+        print("\nYou were shot and blacked out...")
+        sleep(1)
+        print("\nYou woke up by being defibrillated by the stranger you passed when going to the Dealer's room")
+        sleep(2)
+        print('\n"You\'re lucky it left you with a charge!')
+        sleep(1.5)
+        print('\n"Get up, '+PlayerName+ '.\nThe night is young."')
+        FirstGame = 1
+        if (CurrentGame == 1):
+            Game()
+        else:
+            Game2()
+    else:          
+        print("\n\n*********************\n\nGAME OVER\nYou died")
+        exit()
 
 def RandomItems():
     global CurrentGame, PlayerInventory, DealerInventory, GuaranteedItems
