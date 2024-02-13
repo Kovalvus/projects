@@ -55,7 +55,9 @@ ItemList = ["Hand Saw","HandCuffs", "Cigarette Pack", "Magnifying Glass", "Beer"
 
 def Start():  # Main Menu
     global StartAsk
-    print('*********************\nWelcome to Buckshot Roulette!\n\n"Start" to start the game\n"Help" for game info\n"Quit" to quit the program\n')
+    print('(For commands to work you have to type them in all small letters like this: "test"\n or with the first big letter like this: "Test")\n\n')
+    sleep(2)
+    print('*********************\nWelcome to Backshot Roulette!\n\n"Start" to start the game\n"Help" for game info\n"Quit" to quit the program\n')
     StartAsk = input()
 
     if(StartAsk == "Start" or StartAsk == "start"):
